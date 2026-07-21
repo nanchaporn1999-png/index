@@ -1,0 +1,422 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>WATER POLLUTION - 5 CHAPTERS</title>
+    
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Mitr:wght@300;400;500&family=Prompt:ital,wght@0,300;0,400;0,600;1,300&display=swap" rel="stylesheet">
+
+    <style>
+        /* Reset & Base Style */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            background-color: #0d1117;
+            color: #fff;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            overflow-x: hidden;
+            font-family: 'Prompt', sans-serif; 
+            padding: 40px 20px;
+        }
+
+        h1 {
+            font-family: 'Mitr', sans-serif;
+            font-size: 2.5rem;
+            color: #38bdf8; 
+            text-transform: uppercase;
+            letter-spacing: 3px;
+            margin-bottom: 10px;
+            text-shadow: 0 0 15px rgba(56, 189, 248, 0.4);
+            text-align: center;
+        }
+
+        p.subtitle {
+            color: #94a3b8;
+            margin-bottom: 40px;
+            font-size: 1.05rem;
+            text-align: center;
+            font-weight: 300;
+            max-width: 750px;
+            line-height: 1.6;
+        }
+
+        /* Container ของ 5 Chapters (Grid Layout) */
+        .grid-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+            gap: 20px;
+            max-width: 1100px;
+            width: 100%;
+            justify-content: center;
+        }
+
+        .hbd-card {
+            position: relative;
+            height: 380px;
+            border-radius: 16px;
+            overflow: hidden;
+            cursor: pointer;
+            box-shadow: 0 8px 20px rgba(0,0,0,0.6);
+            transition: transform 0.4s cubic-bezier(0.25, 1, 0.5, 1), box-shadow 0.4s;
+            border: 1px solid #1e293b;
+        }
+
+        .hbd-card:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 12px 25px rgba(56, 189, 248, 0.35);
+            border-color: #38bdf8;
+        }
+
+        .card-bg {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            filter: brightness(0.45) contrast(1.1);
+            transition: filter 0.3s;
+        }
+
+        .hbd-card:hover .card-bg {
+            filter: brightness(0.65) contrast(1.2);
+        }
+
+        .card-content {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            padding: 20px 18px;
+            background: linear-gradient(to top, rgba(13, 17, 23, 0.95) 0%, rgba(13, 17, 23, 0.6) 70%, transparent 100%);
+        }
+
+        .chapter-tag {
+            font-size: 0.8rem;
+            color: #38bdf8;
+            font-weight: 600;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+            margin-bottom: 4px;
+        }
+
+        .card-title {
+            font-family: 'Mitr', sans-serif;
+            font-size: 1.2rem;
+            font-weight: 400;
+            margin-bottom: 6px;
+            color: #fff;
+        }
+
+        .card-desc {
+            font-size: 0.85rem;
+            color: #94a3b8;
+            line-height: 1.4;
+            font-weight: 300;
+        }
+
+        /* หน้าต่างป๊อปอัป (Modal Popup) */
+        .overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.85);
+            backdrop-filter: blur(5px);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.4s ease;
+            z-index: 999;
+        }
+
+        .overlay.active {
+            opacity: 1;
+            pointer-events: auto;
+        }
+
+        .modal-content {
+            position: relative;
+            background: #161b22;
+            max-width: 600px;
+            width: 90%;
+            border-radius: 20px;
+            overflow: hidden;
+            transform: scale(0.8);
+            transition: transform 0.4s cubic-bezier(0.25, 1, 0.5, 1);
+            box-shadow: 0 0 35px rgba(56, 189, 248, 0.25);
+            border: 1px solid #30363d;
+            max-height: 85vh;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .overlay.active .modal-content {
+            transform: scale(1);
+        }
+
+        /* กล่องแสดงรูปภาพ */
+        .modal-img-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+            gap: 10px;
+            width: 100%;
+            max-height: 220px;
+            background: #0d1117;
+            padding: 12px;
+            overflow-y: auto;
+        }
+
+        .modal-img {
+            width: 100%;
+            height: 140px;
+            object-fit: cover;
+            border-radius: 8px;
+        }
+
+        .modal-text-box {
+            padding: 25px 30px;
+            overflow-y: auto;
+        }
+
+        .modal-hbd-title {
+            font-family: 'Mitr', sans-serif;
+            font-size: 1.5rem;
+            color: #38bdf8;
+            margin-bottom: 12px;
+            font-weight: 400;
+            border-bottom: 2px solid #1f2937;
+            padding-bottom: 10px;
+        }
+
+        .modal-hbd-desc {
+            font-size: 0.95rem;
+            color: #e2e8f0;
+            line-height: 1.7;
+            white-space: pre-line;
+            font-weight: 300;
+            text-align: left;
+        }
+
+        .close-btn {
+            position: absolute;
+            top: 12px;
+            right: 15px;
+            font-size: 1.8rem;
+            color: #fff;
+            cursor: pointer;
+            transition: color 0.2s;
+            background: rgba(0, 0, 0, 0.6);
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 10;
+        }
+
+        .close-btn:hover {
+            color: #38bdf8;
+        }
+    </style>
+</head>
+<body>
+
+    <h1>มลพิษทางน้ำ 
+        WATER POLLUTION</h1>
+    <p class="subtitle">
+        ณัฐวุฒิ-102 บุญสิตา-103 อารีรัตน์-109
+            นันท์ชพร-554 สุนิตา-560
+    </p>
+
+    <div class="grid-container">
+        <!-- Chapter 1 -->
+        <div class="hbd-card" onclick="openModal('ch1')">
+            <img src="ch1.jpg" alt="น้ำเสีย" class="card-bg" onerror="this.src='https://images.unsplash.com/photo-1518837695005-2083093ee35b?w=600'">
+            <div class="card-content">
+                <div class="chapter-tag">Chapter 1</div>
+                <div class="card-title">น้ำเสีย (Wastewater)</div>
+                <div class="card-desc">ความหมายและการเปลี่ยนแปลงทางกายภาพ ชีวภาพ เคมี</div>
+            </div>
+        </div>
+
+        <!-- Chapter 2 -->
+        <div class="hbd-card" onclick="openModal('ch2')">
+            <img src="ch2.jpg" alt="แหล่งที่มาและสาเหตุ" class="card-bg" onerror="this.src='https://images.unsplash.com/photo-1611273426858-450d8e3c9fce?w=600'">
+            <div class="card-content">
+                <div class="chapter-tag">Chapter 2</div>
+                <div class="card-title">แหล่งที่มา/สาเหตุ</div>
+                <div class="card-desc">จากชุมชน โรงงานอุตสาหกรรม และการเกษตรกรรม</div>
+            </div>
+        </div>
+
+        <!-- Chapter 3 -->
+        <div class="hbd-card" onclick="openModal('ch3')">
+            <img src="ch3.jpg" alt="แนวทางการแก้ไขปัญหา" class="card-bg" onerror="this.src='https://images.unsplash.com/photo-1530587191325-3db32d826c18?w=600'">
+            <div class="card-content">
+                <div class="chapter-tag">Chapter 3</div>
+                <div class="card-title">แนวทางการแก้ไขปัญหา</div>
+                <div class="card-desc">การบำบัดน้ำเสีย กฎหมาย และการร่วมมือของชุมชน</div>
+            </div>
+        </div>
+
+        <!-- Chapter 4 -->
+        <div class="hbd-card" onclick="openModal('ch4')">
+            <img src="ch4.jpg" alt="ข้อคิด" class="card-bg" onerror="this.src='https://images.unsplash.com/photo-1507525428034-b723cf961d3e?w=600'">
+            <div class="card-content">
+                <div class="chapter-tag">Chapter 4</div>
+                <div class="card-title">ข้อคิด (Reflection)</div>
+                <div class="card-desc">มุมมองและความสำคัญของการดูแลทรัพยากรน้ำ</div>
+            </div>
+        </div>
+
+        <!-- Chapter 5 -->
+        <div class="hbd-card" onclick="openModal('ch5')">
+            <img src="ch5.jpg" alt="อ้างอิง" class="card-bg" onerror="this.src='https://images.unsplash.com/photo-1456513080510-7bf3a84b82f8?w=600'">
+            <div class="card-content">
+                <div class="chapter-tag">Chapter 5</div>
+                <div class="card-title">อ้างอิง (References)</div>
+                <div class="card-desc">แหล่งข้อมูลและเอกสารอ้างอิงของเนื้อหา</div>
+            </div>
+        </div>
+    </div>
+
+    <!-- หน้าต่างป๊อปอัป (Modal) -->
+    <div class="overlay" id="hbdOverlay" onclick="closeModal()">
+        <div class="modal-content" onclick="event.stopPropagation()">
+            <span class="close-btn" onclick="closeModal()">&times;</span>
+            
+            <div class="modal-img-container" id="modalImgContainer"></div>
+            
+            <div class="modal-text-box">
+                <div id="modalTitle" class="modal-hbd-title"></div>
+                <p id="modalDesc" class="modal-hbd-desc"></p>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // ข้อมูลแบ่งตาม 5 Chapters ใหม่
+        const contentData = {
+            ch1: {
+                title: "Chapter 1: น้ำเสีย (Wastewater)",
+                images: [ "https://images.unsplash.com/photo-1518837695005-2083093ee35b?w=400"
+                ], 
+                desc: `น้ำเสีย (Wastewater)
+นํ้าทิ้งหรือนํ้าที่ผ่านการการใช้ประโยชน์จากกิจกรรม ต่าง ๆ ในอาคารบ้านเรือนหรือโรงงานอุตสาหกรรมโดยมีสิ่งปนเปื้อน 
+ทําให้สมบัติของน้ำเปลี่ยนแปลงไปจากเดิม
+
+1.การเปลี่ยนแปลงทางกายภาพ 
+เช่น การมีสารแขวนลอยทําให้น้ำขุ่น
+
+2.การเปลี่ยนแปลงทางชีวภาพ 
+เช่น การมีจุลินทรีย์ในน้ำที่มากเกินไป
+
+3.การเปลี่ยนแปลงทางเคมี 
+เกิดจากสาร อนินทรีย์หรือสารอินทรีย์ ถูกปล่อยลงในน้ำ ทําให้น้ำมีสภาพเป็นกรด หรือด่างมากเกินไป`
+            },
+            ch2: {
+                title: "Chapter 2: แหล่งที่มา/สาเหตุของน้ำเสีย",
+                images: [
+                    "https://images.unsplash.com/photo-1611273426858-450d8e3c9fce?w=400"
+                ], 
+                desc: `แหล่งที่มาสำคัญของน้ำเสีย ได้แก่:
+
+1.น้ำเสียจากชุมชน
+เป็นน้ำจากการใช้ในชีวิตประจําวันของครัวเรือน น้ำเสียนี้มักเกิดการเน่าเสียจนส่งกลิ่น เหม็น ทําให้ออกซิเจนในน้ำลดลง 
+มีเชื้อโรคปนมาในน้ำนี้ 
+
+2.น้ำเสียจากโรงงานอุตสาหกรรม
+น้ำเสียประเภทนี้จะมีสมบัติแตกต่างกันออกไปตามประเภทของโรงงาน การบําบัดน้ำเสียก่อนปล่อยลงสู่แม่น้ำลําคลองมีหลายวิธี
+
+3.น้ำเสียจากการเกษตรกรรม
+เป็นน้ำเสียที่เกิดจากการเพาะปลูก มักพบยาฆ่าแมลง ยาฆ่าวัชพืช และปุ๋ย ปนมาในน้ำ น้ำเสียจากการเลี้ยงสัตว์ จะมีสารอินทรีย์เป็นหลัก`
+            },
+            ch3: {
+                title: "Chapter 3: แนวทางการแก้ไขปัญหา",
+                images: [
+                    "https://images.unsplash.com/photo-1530587191325-3db32d826c18?w=400"
+                ], 
+                desc: `แนวทางการแก้ไขและบำบัดน้ำเสีย:
+
+1.  ทุกคนต้องช่วยกันรักษาความสะอาด ไม่ทิ้งขยะและของเสียต่าง ๆ ลงในแม่น้ำลำคลอง
+2.  โรงแรม ธุรกิจขนาดเล็กหรือใหญ่ หน่วยงานต่าง ๆ ต้องไม่ปล่อยน้ำเสีย สารเคมี สารพิษต่าง ๆ ลงในแหล่งน้ำ หากจำเป็นต้องมี
+กรรมวิธีบำบัดน้ำเสียอย่างถูกวิธี
+3.  ลดปริมาณการใช้สารเคมีในการเกษตร โดยหันมาใช้วิธีการในการปราบศัตรูพืช ใช้ปุ๋ยธรรมชาติแทนปุ๋ยเคมี ลดละวิธีการใช้สาร
+เร่งโตในพืช
+4.  ทุกหน่วยงานไม่ว่าภาครัฐและเอกชน ต้องร่วมมือกันปลูกจิตสำนึกให้ทุกคนในสังคมหวงแหน รักษาธรรมชาติและสิ่งแวดล้อม`
+            },
+            ch4: {
+                title: "Chapter 4: ข้อคิด (Reflection)",
+                images: [
+                    "https://images.unsplash.com/photo-1507525428034-b723cf961d3e?w=400"
+                ], 
+                desc: `ข้อคิดและมุมมอง:
+
+"น้ำ คือ สายใยแห่งชีวิต"
+การเกิดมลพิษทางน้ำไม่ได้ส่งผลกระทบต่อสัตว์น้ำหรือระบบนิเวศเท่านั้น แต่สุดท้ายแล้วผลกระทบนั้นจะสะท้อนกลับมาสู่สุขภาพและคุณภาพชีวิตของมนุษย์เราเอง
+
+การอนุรักษ์แหล่งน้ำไม่ใช่หน้าที่ของคนใดคนหนึ่ง แต่เริ่มต้นได้ง่ายๆ จากตัวเราเอง เพียงแค่เปลี่ยนพฤติกรรมการใช้น้ำและการทิ้งขยะในชีวิตประจำวัน`
+            },
+            ch5: {
+                title: "Chapter 5: อ้างอิง (References)",
+                images: [
+                    "https://images.unsplash.com/photo-1456513080510-7bf3a84b82f8?w=400"
+                ], 
+                desc: `เอกสารและแหล่งข้อมูลอ้างอิง:
+
+1. ภาควิชาชีววิทยา คณะศิลปศาสตร์และวิทยาศาสตร์ มหาวิทยาลัยเกษตรศาสตร์ วิทยาเขตกำแพงแสน. (ม.ป.ป.). มลพิษทางน้ำ (Water pollution) [เอกสารประกอบการสอน]. สืบค้นจาก https://bio.flas.kps.ku.ac.th/courses/201/waterpollution.pdf
+
+2. กรมควบคุมมลพิษ กระทรวงทรัพยากรธรรมชาติและสิ่งแวดล้อม. "ความรู้เรื่องน้ำเสียและระบบบำบัดน้ำเสีย."`
+            }
+        };
+
+        function openModal(type) {
+            const overlay = document.getElementById('hbdOverlay');
+            const modalImgContainer = document.getElementById('modalImgContainer');
+            const modalTitle = document.getElementById('modalTitle');
+            const modalDesc = document.getElementById('modalDesc');
+            
+            const data = contentData[type];
+            
+            modalImgContainer.innerHTML = '';
+            data.images.forEach(imgSrc => {
+                const imgElement = document.createElement('img');
+                imgElement.src = imgSrc;
+                imgElement.className = 'modal-img';
+                imgElement.alt = data.title;
+                modalImgContainer.appendChild(imgElement);
+            });
+
+            modalTitle.innerText = data.title;
+            modalDesc.innerText = data.desc;
+            
+            overlay.classList.add('active');
+        }
+
+        function closeModal() {
+            const overlay = document.getElementById('hbdOverlay');
+            overlay.classList.remove('active');
+        }
+
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'Escape') {
+                closeModal();
+            }
+        });
+    </script>
+
+</body>
+</html>
